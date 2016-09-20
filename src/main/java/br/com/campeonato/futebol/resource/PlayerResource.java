@@ -30,7 +30,7 @@ public class PlayerResource {
         return new ResponseEntity<>(player, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/api/player/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/api/player", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<List<Player>> findAll() {
         List<Player> playerList = playerService.findAll();
