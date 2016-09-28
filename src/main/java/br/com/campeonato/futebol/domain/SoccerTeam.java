@@ -18,7 +18,6 @@ public class SoccerTeam implements Serializable {
     private Long id;
     private String name;
     @OneToMany(mappedBy = "soccerTeam")
-    @JsonBackReference
     private List<Player> players;
 
     public Long getId() {

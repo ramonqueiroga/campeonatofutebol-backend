@@ -14,12 +14,13 @@ import java.util.List;
  * Created by Ramon on 07-Sep-16.
  */
 @RestController
+@RequestMapping(value = "/api/player")
 public class PlayerResource {
 
     @Autowired
     private PlayerService playerService;
 
-    @RequestMapping(value = "/api/player/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public ResponseEntity<Player> findOne(@PathVariable("id") String identifier) {
         Long id = Long.parseLong(identifier);
@@ -30,7 +31,7 @@ public class PlayerResource {
         return new ResponseEntity<>(player, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/api/player", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<List<Player>> findAll() {
         List<Player> playerList = playerService.findAll();
@@ -40,4 +41,15 @@ public class PlayerResource {
         return new ResponseEntity<>(playerList, HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Player> saveOne(@RequestBody Player player) {
+        if(player != null) {
+            Player playerRegistered = this.playerService.save(player);
+            if(playerRegistered != null) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 }

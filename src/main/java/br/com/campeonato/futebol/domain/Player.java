@@ -1,5 +1,6 @@
 package br.com.campeonato.futebol.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -18,7 +19,6 @@ public class Player implements Serializable {
     private String Sobrenome;
     private Integer hability;
     @ManyToOne
-    @JsonManagedReference
     private SoccerTeam soccerTeam;
 
     public Long getId() {
@@ -53,6 +53,7 @@ public class Player implements Serializable {
         this.hability = hability;
     }
 
+    @JsonIgnore
     public SoccerTeam getSoccerTeam() {
         return soccerTeam;
     }
