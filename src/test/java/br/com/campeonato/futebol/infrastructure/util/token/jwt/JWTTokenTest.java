@@ -26,7 +26,7 @@ public class JWTTokenTest {
     public void testTokenCreation() {
         Users users = getUsersMock();
 
-        String token = this.jwtToken.createToken(users, new Date());
+        String token = this.jwtToken.createToken(users, TokenExpirationUtil.getExpirationToken());
         assertNotNull(token);
         assertEquals(3, token.split("\\.").length);
     }
@@ -41,12 +41,12 @@ public class JWTTokenTest {
     @Test(expected = AuthenticationException.class)
     public void testTokenCreationWithBlankUser() {
         Users users = new Users();
-        this.jwtToken.createToken(users, new Date());
+        this.jwtToken.createToken(users, TokenExpirationUtil.getExpirationToken());
     }
 
     @Test(expected = AuthenticationException.class)
     public void testTokenCreationWithNullUser() {
-        this.jwtToken.createToken(null, new Date());
+        this.jwtToken.createToken(null, TokenExpirationUtil.getExpirationToken());
     }
 
     @Test

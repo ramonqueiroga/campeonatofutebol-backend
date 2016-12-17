@@ -10,10 +10,7 @@ import java.util.Date;
 public class TokenExpirationUtil {
 
     public static Date getExpirationToken() {
-        LocalDateTime now = LocalDateTime.now();
-        now.plusDays(1);
-        now.withHour(4);
-        now.withMinute(0);
+        LocalDateTime now = LocalDateTime.now().plusDays(1).withHour(4).withMinute(0).withSecond(0);
         return Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
     }
 
