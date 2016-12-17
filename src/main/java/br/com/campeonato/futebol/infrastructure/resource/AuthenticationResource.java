@@ -1,7 +1,7 @@
 package br.com.campeonato.futebol.infrastructure.resource;
 
 import br.com.campeonato.futebol.domain.Users;
-import br.com.campeonato.futebol.infrastructure.util.token.TokenCreator;
+import br.com.campeonato.futebol.infrastructure.util.token.Token;
 import br.com.campeonato.futebol.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,16 +20,18 @@ public class AuthenticationResource {
     private UsersService usersService;
 
     @Autowired
-    private TokenCreator<Users> tokenCreator;
+    private Token<Users> token;
 
     @RequestMapping(value = "/auth", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public ResponseEntity<?> doAuthentication(@RequestBody Users users) {
         Users user = this.usersService.findByNicknameAndPassword(users.getNickname(), users.getPassword());
         if(user != null) {
-            return ResponseEntity.ok(this.tokenCreator.createToken(user));
+            String token = this.token.createToken(user);
+            this.token.decodeToken(token + "1");
+            return ResponseEntity.ok(token);
         }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>("User unauthorized", HttpStatus.UNAUTHORIZED);
     }
 
 }
