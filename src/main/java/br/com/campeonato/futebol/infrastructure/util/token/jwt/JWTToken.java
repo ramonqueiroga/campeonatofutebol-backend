@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -28,13 +29,12 @@ public class JWTToken implements Token<Users> {
     public static final String ISSUER = "campeonato-futebol";
     public static final List<String> AUDIENCE = Collections.singletonList("campeonato-futebol");
     public static final String SUBJECT = "auth";
-    public static final Date EXPERIRATION_TIME = new Date(new Date().getTime() + 60 * 1000);
 
     @Override
-    public String createToken(Users users) {
+    public String createToken(Users users, Date expirationToken) {
         try {
             JWSSigner signer = new MACSigner(SHARED_SECRET);
-            SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), this.createClaims(users));
+            SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), this.createClaims(users, expirationToken));
             signedJWT.sign(signer);
             return signedJWT.serialize();
         } catch (JOSEException e) {
@@ -67,7 +67,30 @@ public class JWTToken implements Token<Users> {
         }
     }
 
-    private JWTClaimsSet createClaims(Users users) {
+    @Override
+    public boolean isTokenValid(String token) {
+        Date now = new Date();
+        Date expirationTime = null;
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(token);
+            JWSVerifier verifier = new MACVerifier(SHARED_SECRET);
+
+            if(signedJWT.verify(verifier)) {
+                JWTClaimsSet jwtClaimsSet = signedJWT.getJWTClaimsSet();
+                expirationTime = jwtClaimsSet.getExpirationTime();
+            }
+        } catch (ParseException | JOSEException e) {
+            throw new DecodeTokenException("Error decoding token when validating it expiration");
+        }
+
+        if(expirationTime != null && now.before(expirationTime)) {
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    private JWTClaimsSet createClaims(Users users, Date expirationTime) {
         if(users == null) throw new AuthenticationException("User is null");
         if(StringUtils.isEmpty(users.getName())) throw new AuthenticationException("Need user name to create token");
         if(StringUtils.isEmpty(users.getSurname())) throw new AuthenticationException("Need user surname to create token");
@@ -77,7 +100,7 @@ public class JWTToken implements Token<Users> {
                 .issuer(ISSUER)
                 .audience(AUDIENCE)
                 .subject(SUBJECT)
-                .expirationTime(EXPERIRATION_TIME)
+                .expirationTime(expirationTime)
                 .claim("nickname", users.getNickname())
                 .claim("username", users.getName())
                 .claim("email", users.getEmail())

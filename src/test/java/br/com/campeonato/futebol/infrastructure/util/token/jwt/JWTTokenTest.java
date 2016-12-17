@@ -7,8 +7,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by Ramon Queiroga on 17/12/2016.
@@ -23,7 +26,7 @@ public class JWTTokenTest {
     public void testTokenCreation() {
         Users users = getUsersMock();
 
-        String token = this.jwtToken.createToken(users);
+        String token = this.jwtToken.createToken(users, new Date());
         assertNotNull(token);
         assertEquals(3, token.split("\\.").length);
     }
@@ -38,14 +41,31 @@ public class JWTTokenTest {
     @Test(expected = AuthenticationException.class)
     public void testTokenCreationWithBlankUser() {
         Users users = new Users();
-        this.jwtToken.createToken(users);
+        this.jwtToken.createToken(users, new Date());
     }
 
     @Test(expected = AuthenticationException.class)
     public void testTokenCreationWithNullUser() {
-        this.jwtToken.createToken(null);
+        this.jwtToken.createToken(null, new Date());
     }
 
+    @Test
+    public void testExpirationTokenInvalid() {
+        LocalDateTime now = LocalDateTime.now().minusDays(1);
+        Date expiration = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+        String token = this.jwtToken.createToken(this.getUsersMock(), expiration);
+        boolean tokenValid = this.jwtToken.isTokenValid(token);
+        assertFalse(tokenValid);
+    }
+
+    @Test
+    public void testExpirationTokenValid() {
+        LocalDateTime now = LocalDateTime.now().plusDays(1);
+        Date expiration = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+        String token = this.jwtToken.createToken(this.getUsersMock(), expiration);
+        boolean tokenValid = this.jwtToken.isTokenValid(token);
+        assertTrue(tokenValid);
+    }
 
     private Users getUsersMock() {
         Users users = new Users();
