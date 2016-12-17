@@ -1,7 +1,7 @@
 package br.com.campeonato.futebol.service;
 
 import br.com.campeonato.futebol.domain.Player;
-import br.com.campeonato.futebol.repository.PlayerRepository;
+import br.com.campeonato.futebol.infrastructure.repository.PlayerRepository;
 import org.springframework.stereotype.Service;
 
 /**

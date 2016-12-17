@@ -1,4 +1,4 @@
-package br.com.campeonato.futebol.configuration;
+package br.com.campeonato.futebol.infrastructure.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

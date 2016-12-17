@@ -1,4 +1,4 @@
-package br.com.campeonato.futebol.configuration.rest;
+package br.com.campeonato.futebol.infrastructure.configuration.rest;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package br.com.campeonato.futebol.repository;
+package br.com.campeonato.futebol.infrastructure.repository;
 
 import br.com.campeonato.futebol.domain.Player;
 import org.springframework.data.repository.CrudRepository;

@@ -1,4 +1,4 @@
-package br.com.campeonato.futebol.resource;
+package br.com.campeonato.futebol.infrastructure.resource;
 
 import br.com.campeonato.futebol.domain.Player;
 import br.com.campeonato.futebol.service.PlayerService;
