@@ -1,5 +1,6 @@
 package br.com.campeonato.futebol.infrastructure.resource;
 
+import br.com.campeonato.futebol.domain.TokenWrapper;
 import br.com.campeonato.futebol.domain.Users;
 import br.com.campeonato.futebol.infrastructure.util.token.Token;
 import br.com.campeonato.futebol.infrastructure.util.token.jwt.TokenExpirationUtil;
@@ -9,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 
 /**
  * Created by Ramon Queiroga on 17/12/2016.
@@ -27,13 +26,13 @@ public class AuthenticationResource {
 
     @RequestMapping(value = "/auth", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> doAuthentication(@RequestBody Users users) {
+    public ResponseEntity<TokenWrapper> doAuthentication(@RequestBody Users users) {
         Users user = this.usersService.findByNicknameAndPassword(users.getNickname(), users.getPassword());
         if(user != null) {
             String token = this.token.createToken(user, TokenExpirationUtil.getExpirationToken());
-            return ResponseEntity.ok(token);
+            return ResponseEntity.ok(new TokenWrapper(token));
         }
-        return new ResponseEntity<>("User unauthorized", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new TokenWrapper("User unauthorized"), HttpStatus.UNAUTHORIZED);
     }
 
 }

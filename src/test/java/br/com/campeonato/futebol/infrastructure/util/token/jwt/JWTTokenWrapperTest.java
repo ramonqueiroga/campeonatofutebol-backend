@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
  * Created by Ramon Queiroga on 17/12/2016.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class JWTTokenTest {
+public class JWTTokenWrapperTest {
 
     private static final String TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjYW1wZW9uYXRvLWZ1dGVib2wiLCJzdWIiOiJhdXRoIiwic3VybmFtZSI6InF1ZWlyb2dhIiwiaXNzIjoiY2FtcGVvbmF0by1mdXRlYm9sIiwibmlja25hbWUiOiJyYW1vbnF1ZWlyb2dhIiwiZXhwIjoxNDgxOTk5OTgxLCJlbWFpbCI6ImVtYWlsIiwidXNlcm5hbWUiOiJSYW1vbiJ9.Qxc7PTP0oI7OKWA6mwqM0AffKjpCBozDo-3LK3cIauQ";
     private JWTToken jwtToken = new JWTToken();
