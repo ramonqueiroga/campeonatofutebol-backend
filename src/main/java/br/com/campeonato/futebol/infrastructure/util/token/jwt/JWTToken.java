@@ -44,8 +44,8 @@ public class JWTToken implements Token<Users> {
 
     @Override
     public Users decodeToken(String token) {
-        Map<String, Object> claims = null;
         try {
+            Map<String, Object> claims = null;
             SignedJWT signedJWT = SignedJWT.parse(token);
             JWSVerifier verifier = new MACVerifier(SHARED_SECRET);
 
